@@ -24,27 +24,25 @@ import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.navigation.NavigationView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
 /**
- * GhostWire shell: a domain sidebar over a tabbed host. Each domain in [domains]
- * owns a list of tabs (title + fragment factory); the ☰ button opens the sidebar,
- * picking a domain swaps the top tabs to that domain's. Adding a capability =
- * adding one line to the right domain here plus its fragment, nothing else.
+ * GhostWire shell. The bottom bar switches capability domain (always visible, one
+ * tap); within a domain the top tabs switch screens. Each domain in [domains] owns
+ * a list of (title, fragment factory) — adding a capability is one line here plus
+ * its fragment, and if it is a new domain, one item in res/menu/bottom_nav.xml.
  */
 class MainActivity : AppCompatActivity() {
 
-    // Keys line up with the item ids in res/menu/domains.xml (see domainFor()).
+    // Keys line up with the item ids in res/menu/bottom_nav.xml (see domainFor()).
     private val domains: Map<String, List<Pair<String, () -> Fragment>>> = linkedMapOf(
         "Cellular" to listOf(
             "SIM" to { SimFragment() },
@@ -60,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         "Wi-Fi" to listOf("Wi-Fi" to { PlaceholderFragment("Wi-Fi — coming soon") }),
     )
 
-    private lateinit var drawer: DrawerLayout
+    private lateinit var toolbar: Toolbar
     private lateinit var pager: ViewPager2
     private lateinit var tabLayout: TabLayout
     private var mediator: TabLayoutMediator? = null
@@ -72,22 +70,15 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        drawer = findViewById(R.id.drawer)
+        toolbar = findViewById(R.id.toolbar)
         pager = findViewById(R.id.pager)
         tabLayout = findViewById(R.id.tabs)
 
-        findViewById<ImageButton>(R.id.open_domains).setOnClickListener {
-            drawer.openDrawer(GravityCompat.START)
+        findViewById<BottomNavigationView>(R.id.bottom_nav).setOnItemSelectedListener { item ->
+            domainFor(item.itemId)?.let { showDomain(it); true } ?: false
         }
-        findViewById<NavigationView>(R.id.domains).also { nav ->
-            nav.setCheckedItem(R.id.domain_cellular)
-            nav.setNavigationItemSelectedListener { item ->
-                domainFor(item.itemId)?.let { showDomain(it) }
-                drawer.closeDrawer(GravityCompat.START)
-                true
-            }
-        }
-        showDomain(domains.keys.first())
+        // Selecting the item fires the listener, which calls showDomain().
+        findViewById<BottomNavigationView>(R.id.bottom_nav).selectedItemId = R.id.domain_cellular
         handleTagIntent(intent)
     }
 
@@ -118,14 +109,10 @@ class MainActivity : AppCompatActivity() {
         }.start()
     }
 
-    override fun onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) drawer.closeDrawer(GravityCompat.START)
-        else super.onBackPressed()
-    }
-
     private fun domainFor(itemId: Int): String? = when (itemId) {
         R.id.domain_cellular -> "Cellular"
         R.id.domain_nfc -> "NFC"
+        R.id.domain_gnss -> "GNSS"
         R.id.domain_sdr -> "SDR Labs"
         R.id.domain_wifi -> "Wi-Fi"
         else -> null
@@ -133,12 +120,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun showDomain(name: String) {
         tabs = domains[name] ?: return
+        toolbar.title = name
         mediator?.detach()
         pager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount() = tabs.size
             override fun createFragment(position: Int) = tabs[position].second()
         }
-        // A single tab reads better centered than scrolled hard-left.
+        // Hide the tab strip when a domain has a single screen — nothing to switch.
         tabLayout.tabMode = if (tabs.size > 1) TabLayout.MODE_SCROLLABLE else TabLayout.MODE_FIXED
         tabLayout.visibility = if (tabs.size > 1) View.VISIBLE else View.GONE
         mediator = TabLayoutMediator(tabLayout, pager) { tab, pos -> tab.text = tabs[pos].first }
