@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
             "Map" to { MapFragment() },
             "DIAG" to { DiagFragment() },
         ),
-        "NFC" to listOf("Walrus" to { WalrusFragment() }),
+        "NFC" to listOf("Walrus" to { WalrusFragment() }, "NCI" to { NciFragment() }),
         "GNSS" to listOf("Spoof" to { SpoofFragment() }),
         "SDR Labs" to listOf("SDR" to { SdrFragment() }),
         "Wireless" to listOf(
