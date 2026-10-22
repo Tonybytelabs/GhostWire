@@ -55,7 +55,10 @@ class MainActivity : AppCompatActivity() {
         "NFC" to listOf("Walrus" to { WalrusFragment() }),
         "GNSS" to listOf("Spoof" to { SpoofFragment() }),
         "SDR Labs" to listOf("SDR" to { SdrFragment() }),
-        "Wi-Fi" to listOf("Wi-Fi" to { PlaceholderFragment("Wi-Fi — coming soon") }),
+        "Wireless" to listOf(
+            "Bluetooth" to { BtFragment() },
+            "Wi-Fi" to { PlaceholderFragment("Wi-Fi — coming soon") },
+        ),
     )
 
     private lateinit var toolbar: Toolbar
@@ -114,7 +117,7 @@ class MainActivity : AppCompatActivity() {
         R.id.domain_nfc -> "NFC"
         R.id.domain_gnss -> "GNSS"
         R.id.domain_sdr -> "SDR Labs"
-        R.id.domain_wifi -> "Wi-Fi"
+        R.id.domain_wifi -> "Wireless"
         else -> null
     }
 
