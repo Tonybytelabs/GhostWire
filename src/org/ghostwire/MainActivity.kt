@@ -55,6 +55,7 @@ class MainActivity : AppCompatActivity() {
             "DIAG" to { DiagFragment() },
         ),
         "NFC" to listOf("Walrus" to { WalrusFragment() }),
+        "GNSS" to listOf("Spoof" to { SpoofFragment() }),
         "SDR Labs" to listOf("SDR" to { SdrFragment() }),
         "Wi-Fi" to listOf("Wi-Fi" to { PlaceholderFragment("Wi-Fi — coming soon") }),
     )
