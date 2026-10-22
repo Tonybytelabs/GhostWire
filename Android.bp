@@ -35,3 +35,12 @@ android_app {
         "ghostwire-osmdroid-android",
     ],
 }
+
+// Native DIAG helper: NV item read/write over /dev/diag (root). Shipped to
+// /system_ext/bin and exec'd by the DIAG tab; see native/ghostwire_diag.c.
+cc_binary {
+    name: "ghostwire_diag",
+    srcs: ["native/ghostwire_diag.c"],
+    cflags: ["-Wall", "-Werror"],
+    system_ext_specific: true,
+}

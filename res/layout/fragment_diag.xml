@@ -8,13 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="DIAG"
-        style="@style/GhostWire.Header" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Qualcomm DIAG (/dev/diag) over root. Decode with QCSuper/SnoopSnitch."
+        android:text="Qualcomm DIAG (/dev/diag) over root. Capture for QCSuper/SnoopSnitch, or read/write modem NV items."
         android:paddingBottom="12dp" />
 
     <LinearLayout
@@ -42,6 +36,73 @@
             android:text="Copy" />
     </LinearLayout>
 
+    <!-- NV item read/write -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="4dp">
+
+        <EditText
+            android:id="@+id/diag_nv_item"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="NV item (e.g. 550)"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/diag_nv_hex"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:hint="write hex (optional)"
+            android:inputType="textNoSuggestions" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/diag_nv_read"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Read NV" />
+
+        <Button
+            android:id="@+id/diag_nv_write"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Write NV" />
+    </LinearLayout>
+
+    <!-- AT passthrough -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="4dp">
+
+        <EditText
+            android:id="@+id/diag_at_cmd"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="AT command (e.g. ATI)"
+            android:inputType="textCapCharacters|textNoSuggestions" />
+
+        <Button
+            android:id="@+id/diag_at_send"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send AT" />
+    </LinearLayout>
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -57,6 +118,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="monospace"
+                android:textSize="12sp"
                 android:textIsSelectable="true" />
         </ScrollView>
     </com.google.android.material.card.MaterialCardView>
