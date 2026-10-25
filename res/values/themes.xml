@@ -1,34 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.GhostWire" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/gw_accent</item>
-        <item name="colorPrimaryVariant">@color/gw_primary_dark</item>
-        <item name="colorOnPrimary">@color/gw_on_primary</item>
-        <item name="colorSecondary">@color/gw_accent</item>
-        <item name="colorSecondaryVariant">@color/gw_primary_dark</item>
-        <item name="colorSurface">@color/gw_surface</item>
-        <item name="colorOnSurface">@color/gw_on_surface</item>
-        <item name="android:colorBackground">@color/gw_bg</item>
-        <item name="android:windowBackground">@color/gw_bg</item>
-        <item name="colorControlNormal">@color/gw_on_surface</item>
+    <!-- Project Elixir look: Material 3 with dynamic (Monet) colour, so the accent
+         and surfaces follow the system wallpaper palette. No colour roles are pinned
+         here, otherwise they would override Monet; the gw_* colours in colors.xml are
+         only the fallback when dynamic colour is unavailable. -->
+    <style name="Theme.GhostWire" parent="Theme.Material3.DynamicColors.DayNight">
         <item name="materialButtonStyle">@style/GhostWire.Button</item>
         <item name="materialButtonOutlinedStyle">@style/GhostWire.Button.Outlined</item>
+        <item name="materialCardViewStyle">@style/GhostWire.Card</item>
     </style>
 
-    <!-- Pill buttons: filled coral for primary actions, outlined coral for the rest.
-         Wired as the default button styles above so every fragment picks them up. -->
-    <style name="GhostWire.Button" parent="Widget.MaterialComponents.Button">
+    <!-- Pill buttons, Elixir's fully-rounded shape. -->
+    <style name="GhostWire.Button" parent="Widget.Material3.Button">
         <item name="cornerRadius">20dp</item>
-        <item name="backgroundTint">?attr/colorPrimary</item>
-        <item name="android:textColor">@color/gw_on_primary</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="GhostWire.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+    <style name="GhostWire.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
         <item name="cornerRadius">20dp</item>
-        <item name="strokeColor">?attr/colorPrimary</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:textAllCaps">false</item>
     </style>
 
@@ -40,10 +30,10 @@
         <item name="android:paddingBottom">12dp</item>
     </style>
 
-    <!-- Rounded surface card wrapping a tab's controls/output. -->
-    <style name="GhostWire.Card" parent="Widget.MaterialComponents.CardView">
-        <item name="cardCornerRadius">16dp</item>
-        <item name="cardBackgroundColor">?attr/colorSurface</item>
+    <!-- Rounded tonal card wrapping a tab's controls/output. Elixir uses 28dp
+         corners and a filled surface-container tone, not an elevated white card. -->
+    <style name="GhostWire.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="cardCornerRadius">28dp</item>
         <item name="cardElevation">0dp</item>
         <item name="cardUseCompatPadding">true</item>
         <item name="contentPadding">16dp</item>
@@ -51,11 +41,11 @@
 
     <!-- Bottom tab pills: accent-filled pill behind the selected label, muted
          unselected text, scrollable. -->
-    <style name="GhostWire.TabPill" parent="Widget.MaterialComponents.TabLayout">
+    <style name="GhostWire.TabPill" parent="Widget.Material3.TabLayout">
         <item name="tabMode">scrollable</item>
         <item name="tabGravity">center</item>
-        <item name="tabTextColor">@color/gw_muted</item>
-        <item name="tabSelectedTextColor">@color/gw_on_primary</item>
+        <item name="tabTextColor">?attr/colorOnSurfaceVariant</item>
+        <item name="tabSelectedTextColor">?attr/colorOnPrimary</item>
         <item name="tabIndicator">@drawable/tab_pill_indicator</item>
         <item name="tabIndicatorColor">?attr/colorPrimary</item>
         <item name="tabIndicatorGravity">stretch</item>
