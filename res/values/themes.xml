@@ -7,6 +7,11 @@
          Not Monet: the app carries its own identity. gw_* tokens resolve to the
          forced-night values in res/values-night. -->
     <style name="Theme.GhostWire" parent="Theme.Material3.DayNight">
+        <!-- No system action bar: the app uses its own MaterialToolbar (which shows the
+             Ghost Wire wordmark). Without this the decor action bar also drew the
+             activity label, so "Ghost Wire" appeared twice. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/gw_accent</item>
         <item name="colorOnPrimary">@color/gw_on_accent</item>
         <item name="colorPrimaryContainer">@color/gw_raised</item>
