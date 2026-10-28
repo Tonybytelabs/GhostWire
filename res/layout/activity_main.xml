@@ -17,6 +17,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            app:logo="@drawable/gw_logo"
+            app:titleTextAppearance="@style/GhostWire.ToolbarTitle"
             app:titleTextColor="?attr/colorOnSurface"
             app:titleCentered="false" />
 

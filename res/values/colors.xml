@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  GhostWire palette — coral accent on cream (light) / dark. This file holds the
-  LIGHT (cream) values; res/values-night/colors.xml holds the dark ones. The app
-  defaults to dark (MainActivity forces night mode); cream is the light variant.
-  Rebranding = change gw_accent here and in values-night.
+  GhostWire brand palette — mint accent (#3CF2B0) on near-black navy (#0B0F14),
+  sampled from the Ghost Wire logo lockup. This file holds the LIGHT values;
+  res/values-night/colors.xml holds the dark ones (the default look, the app forces
+  night). Rebranding = change gw_accent here and in values-night.
 -->
 <resources>
-    <color name="gw_accent">#F0502E</color>
-    <color name="gw_primary">#F0502E</color>
-    <color name="gw_primary_dark">#C63F20</color>
-    <color name="gw_on_primary">#FFFFFF</color>
-    <color name="gw_bg">#F5F0E8</color>
+    <color name="gw_accent">#12B386</color>
+    <color name="gw_primary">#12B386</color>
+    <color name="gw_primary_dark">#0C8A68</color>
+    <color name="gw_on_primary">#0B0F14</color>
+    <color name="gw_bg">#F5F7F8</color>
     <color name="gw_surface">#FFFFFF</color>
-    <color name="gw_on_surface">#1C1E22</color>
-    <color name="gw_muted">#6B6B6B</color>
+    <color name="gw_on_surface">#0B0F14</color>
+    <color name="gw_muted">#5A6472</color>
+
+    <!-- Fixed (density-independent) adaptive-icon background, = the logo's navy. -->
+    <color name="ic_launcher_bg">#0B0F14</color>
 </resources>

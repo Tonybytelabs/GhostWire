@@ -1,31 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Project Elixir look: Material 3 with dynamic (Monet) colour, so the accent
-         and surfaces follow the system wallpaper palette. No colour roles are pinned
-         here, otherwise they would override Monet; the gw_* colours in colors.xml are
-         only the fallback when dynamic colour is unavailable. -->
-    <style name="Theme.GhostWire" parent="Theme.Material3.DynamicColors.DayNight">
+    <!-- GhostWire brand look: a fixed Material 3 dark theme pinned to the Ghost Wire
+         palette (mint #3CF2B0 on navy #0B0F14), not Monet, so the app carries its own
+         identity regardless of wallpaper. Every view already reads ?attr/colorPrimary /
+         colorOnSurfaceVariant / colorOnPrimary, so pinning the roles here recolours all
+         of them. The gw_* tokens resolve to values-night (the forced-night default). -->
+    <style name="Theme.GhostWire" parent="Theme.Material3.DayNight">
+        <item name="colorPrimary">@color/gw_accent</item>
+        <item name="colorOnPrimary">@color/gw_on_primary</item>
+        <item name="colorPrimaryContainer">@color/gw_primary_dark</item>
+        <item name="colorOnPrimaryContainer">@color/gw_on_primary</item>
+        <item name="colorSecondary">@color/gw_accent</item>
+        <item name="colorOnSecondary">@color/gw_on_primary</item>
+        <item name="android:colorBackground">@color/gw_bg</item>
+        <item name="colorSurface">@color/gw_surface</item>
+        <item name="colorOnSurface">@color/gw_on_surface</item>
+        <item name="colorSurfaceVariant">@color/gw_surface</item>
+        <item name="colorOnSurfaceVariant">@color/gw_muted</item>
+        <item name="colorSurfaceContainerLowest">@color/gw_bg</item>
+        <item name="colorSurfaceContainerLow">@color/gw_bg</item>
+        <item name="colorSurfaceContainer">@color/gw_surface</item>
+        <item name="colorSurfaceContainerHigh">@color/gw_surface</item>
+        <item name="colorSurfaceContainerHighest">@color/gw_surface</item>
+        <item name="android:statusBarColor">@color/gw_bg</item>
+        <item name="android:navigationBarColor">@color/gw_bg</item>
         <item name="materialButtonStyle">@style/GhostWire.Button</item>
         <item name="materialButtonOutlinedStyle">@style/GhostWire.Button.Outlined</item>
         <item name="materialCardViewStyle">@style/GhostWire.Card</item>
+        <item name="toolbarStyle">@style/GhostWire.Toolbar</item>
+        <!-- Poppins is the Ghost Wire wordmark font; use it for titles. -->
+        <item name="android:fontFamily">@font/poppins_medium</item>
     </style>
 
-    <!-- Pill buttons, Elixir's fully-rounded shape. -->
+    <!-- Toolbar: the ghost logo sits left of the domain title, set in Poppins. -->
+    <style name="GhostWire.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="titleTextAppearance">@style/GhostWire.ToolbarTitle</item>
+        <item name="titleTextColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="GhostWire.ToolbarTitle" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">@font/poppins_semibold</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- Pill buttons, fully-rounded shape, Poppins. -->
     <style name="GhostWire.Button" parent="Widget.Material3.Button">
         <item name="cornerRadius">20dp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/poppins_medium</item>
     </style>
 
     <style name="GhostWire.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
         <item name="cornerRadius">20dp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/poppins_medium</item>
     </style>
 
-    <!-- Section title at the top of each tab. -->
+    <!-- Section title at the top of each tab, in the Poppins wordmark font. -->
     <style name="GhostWire.Header" parent="">
+        <item name="android:fontFamily">@font/poppins_semibold</item>
         <item name="android:textSize">22sp</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textColor">?attr/colorPrimary</item>
         <item name="android:paddingBottom">12dp</item>
     </style>
@@ -63,6 +98,7 @@
     <style name="GhostWire.TabText" parent="TextAppearance.AppCompat.Button">
         <item name="android:textSize">16sp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">@font/poppins_medium</item>
     </style>
 
 </resources>

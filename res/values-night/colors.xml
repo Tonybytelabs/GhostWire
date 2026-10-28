@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Dark palette (the default look). Mirrors res/values/colors.xml token-for-token. -->
+<!-- Dark brand palette (the default look): mint on the logo's near-black navy. -->
 <resources>
-    <color name="gw_accent">#F0502E</color>
-    <color name="gw_primary">#F0502E</color>
-    <color name="gw_primary_dark">#C63F20</color>
-    <color name="gw_on_primary">#FFFFFF</color>
-    <color name="gw_bg">#1C1E22</color>
-    <color name="gw_surface">#26292E</color>
-    <color name="gw_on_surface">#FFFFFF</color>
-    <color name="gw_muted">#9AA0A6</color>
+    <color name="gw_accent">#3CF2B0</color>
+    <color name="gw_primary">#3CF2B0</color>
+    <color name="gw_primary_dark">#24C98A</color>
+    <color name="gw_on_primary">#0B0F14</color>
+    <color name="gw_bg">#0B0F14</color>
+    <color name="gw_surface">#141A22</color>
+    <color name="gw_on_surface">#EAF0F2</color>
+    <color name="gw_muted">#7A8694</color>
 </resources>
