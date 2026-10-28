@@ -23,6 +23,10 @@
     <!-- Contactless (Walrus) tab: read cards with the phone's own NFC. -->
     <uses-permission android:name="android.permission.NFC" />
     <uses-feature android:name="android.hardware.nfc" android:required="false" />
+    <!-- BT scan (passive BLE advertisers + classic inquiry). BLUETOOTH_SCAN is
+         self-granted as root at scan time; CONNECT is only for reading names. -->
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <!-- Auto-scan: a foreground service keeps the "scanning" state + notification
          alive, so tapped tags keep being captured; POST_NOTIFICATIONS shows it. -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />

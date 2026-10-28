@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         "GNSS" to listOf("Spoof" to { SpoofFragment() }),
         "SDR Labs" to listOf("SDR" to { SdrFragment() }),
         "Wireless" to listOf(
+            "BT Scan" to { BtScanFragment() },
             "Bluetooth" to { BtFragment() },
             "Wi-Fi" to { PlaceholderFragment("Wi-Fi — coming soon") },
         ),
