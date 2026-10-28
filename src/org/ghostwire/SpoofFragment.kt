@@ -19,17 +19,31 @@
 
 package org.ghostwire
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.SystemClock
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import org.osmdroid.config.Configuration
+import org.osmdroid.events.MapEventsReceiver
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.TilesOverlay
+import java.io.File
 
 /**
  * GNSS location spoof. The GNSS *chip* cannot be made to report a false fix — it is a
@@ -48,19 +62,123 @@ class SpoofFragment : Fragment() {
     private var pushing = false
     private var thread: Thread? = null
 
+    private lateinit var map: MapView
+    private var marker: Marker? = null
+    private var mapReady = false
+    // Guards the field<->marker loop: set while one side programmatically updates the other.
+    private var syncing = false
+
     // gps + network so both the raw-provider and legacy consumers are covered; the fused
     // provider delegates to these on AOSP, so this reaches getLastLocation too.
     private val providers = listOf(LocationManager.GPS_PROVIDER, LocationManager.NETWORK_PROVIDER)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, s: Bundle?): View =
-        inflater.inflate(R.layout.fragment_spoof, container, false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, s: Bundle?): View {
+        // osmdroid needs a user agent and a writable cache (app-internal, no storage perm).
+        val cfg = Configuration.getInstance()
+        cfg.userAgentValue = requireContext().packageName
+        cfg.osmdroidBasePath = File(requireContext().cacheDir, "osmdroid")
+        cfg.osmdroidTileCache = File(cfg.osmdroidBasePath, "tiles")
+        return inflater.inflate(R.layout.fragment_spoof, container, false)
+    }
 
     override fun onViewCreated(view: View, s: Bundle?) {
         out = view.findViewById(R.id.spoof_out)
         lat = view.findViewById(R.id.spoof_lat)
         lon = view.findViewById(R.id.spoof_lon)
+        map = view.findViewById(R.id.spoof_map)
+        val hint = view.findViewById<TextView>(R.id.spoof_map_hint)
         view.findViewById<Button>(R.id.spoof_start).setOnClickListener { start() }
         view.findViewById<Button>(R.id.spoof_stop).setOnClickListener { stop() }
+
+        // Typing a coordinate moves the pin (when the map is up).
+        val watcher = object : TextWatcher {
+            override fun afterTextChanged(e: Editable?) {
+                if (syncing || !mapReady) return
+                val la = lat.text.toString().trim().toDoubleOrNull()
+                val lo = lon.text.toString().trim().toDoubleOrNull()
+                if (la != null && lo != null && la in -90.0..90.0 && lo in -180.0..180.0)
+                    placePin(GeoPoint(la, lo), center = false)
+            }
+            override fun beforeTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+            override fun onTextChanged(s: CharSequence?, a: Int, b: Int, c: Int) {}
+        }
+        lat.addTextChangedListener(watcher)
+        lon.addTextChangedListener(watcher)
+
+        view.findViewById<Button>(R.id.spoof_locate).setOnClickListener { b ->
+            if (map.visibility == View.VISIBLE) {
+                map.visibility = View.GONE; hint.visibility = View.GONE
+                (b as Button).text = "Locate on map"
+            } else {
+                initMap()
+                map.visibility = View.VISIBLE; hint.visibility = View.VISIBLE
+                (b as Button).text = "Hide map"
+                centerInitial()
+            }
+        }
+    }
+
+    private fun initMap() {
+        if (mapReady) return
+        map.setTileSource(TileSourceFactory.MAPNIK)
+        map.setMultiTouchControls(true)
+        map.overlayManager.tilesOverlay.setColorFilter(TilesOverlay.INVERT_COLORS) // dark map
+        map.controller.setZoom(16.0)
+        // Tap to drop/move the pin.
+        val tap = MapEventsOverlay(object : MapEventsReceiver {
+            override fun singleTapConfirmedHelper(p: GeoPoint): Boolean { placePin(p, center = false); return true }
+            override fun longPressHelper(p: GeoPoint) = false
+        })
+        map.overlays.add(tap)
+        mapReady = true
+    }
+
+    /** Move the pin to [p], sync the lat/lon fields, and optionally recenter the map. */
+    private fun placePin(p: GeoPoint, center: Boolean) {
+        if (marker == null) {
+            marker = Marker(map).apply {
+                setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                isDraggable = true
+                setOnMarkerDragListener(object : Marker.OnMarkerDragListener {
+                    override fun onMarkerDrag(m: Marker) { setFields(m.position) }
+                    override fun onMarkerDragEnd(m: Marker) { setFields(m.position); m.showInfoWindow() }
+                    override fun onMarkerDragStart(m: Marker) {}
+                })
+            }
+            map.overlays.add(marker)
+        }
+        marker!!.position = p
+        marker!!.title = "%.6f, %.6f".format(p.latitude, p.longitude)
+        setFields(p)
+        if (center) map.controller.animateTo(p)
+        map.invalidate()
+    }
+
+    private fun setFields(p: GeoPoint) {
+        syncing = true
+        lat.setText("%.6f".format(p.latitude))
+        lon.setText("%.6f".format(p.longitude))
+        syncing = false
+    }
+
+    /** First show: pin the typed coords if valid, else drop on the last known location. */
+    private fun centerInitial() {
+        val la = lat.text.toString().trim().toDoubleOrNull()
+        val lo = lon.text.toString().trim().toDoubleOrNull()
+        if (la != null && lo != null && la in -90.0..90.0 && lo in -180.0..180.0) {
+            placePin(GeoPoint(la, lo), center = true); return
+        }
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+            == PackageManager.PERMISSION_GRANTED
+        ) {
+            val lmgr = requireContext().getSystemService(LocationManager::class.java)
+            val loc = try {
+                lmgr.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                    ?: lmgr.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+            } catch (e: SecurityException) { null }
+            if (loc != null) { placePin(GeoPoint(loc.latitude, loc.longitude), center = true); return }
+        }
+        map.controller.setCenter(GeoPoint(20.0, 0.0)) // world view until a point is chosen
     }
 
     private fun lm() = requireContext().getSystemService(LocationManager::class.java)
@@ -120,6 +238,14 @@ class SpoofFragment : Fragment() {
         for (p in providers) runCatching { mgr.setTestProviderEnabled(p, false) }
             .also { runCatching { mgr.removeTestProvider(p) } }
         out.text = "Stopped. Real location restored."
+    }
+
+    override fun onResume() {
+        super.onResume(); if (mapReady) map.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause(); if (mapReady) map.onPause()
     }
 
     override fun onDestroyView() {

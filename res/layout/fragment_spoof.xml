@@ -35,6 +35,29 @@
             android:hint="Longitude (e.g. 2.2945)"
             android:inputType="numberSigned|numberDecimal" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/spoof_locate"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Locate on map" />
+
+        <TextView
+            android:id="@+id/spoof_map_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp"
+            android:text="Tap the map to drop the pin, or drag it. The coordinates above stay in sync." />
+
+        <org.osmdroid.views.MapView
+            android:id="@+id/spoof_map"
+            android:layout_width="match_parent"
+            android:layout_height="320dp"
+            android:visibility="gone" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
