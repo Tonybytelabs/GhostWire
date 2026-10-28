@@ -49,11 +49,20 @@
         <item name="tabIndicator">@drawable/tab_pill_indicator</item>
         <item name="tabIndicatorColor">?attr/colorPrimary</item>
         <item name="tabIndicatorGravity">stretch</item>
-        <item name="tabIndicatorFullWidth">false</item>
-        <item name="tabPaddingStart">16dp</item>
-        <item name="tabPaddingEnd">16dp</item>
+        <!-- Full-width pill on a common minimum width, so short (SIM) and long
+             (Recon) labels get the same-sized pill. -->
+        <item name="tabIndicatorFullWidth">true</item>
+        <item name="tabMinWidth">104dp</item>
+        <item name="tabPaddingStart">20dp</item>
+        <item name="tabPaddingEnd">20dp</item>
+        <item name="tabTextAppearance">@style/GhostWire.TabText</item>
         <item name="tabRippleColor">@null</item>
         <item name="android:background">@null</item>
+    </style>
+
+    <style name="GhostWire.TabText" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
 </resources>

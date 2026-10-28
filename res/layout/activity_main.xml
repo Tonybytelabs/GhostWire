@@ -24,7 +24,7 @@
             android:id="@+id/tabs"
             style="@style/GhostWire.TabPill"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="64dp" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2
