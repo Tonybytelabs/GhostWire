@@ -118,12 +118,26 @@ class SpoofFragment : Fragment() {
         }
     }
 
+    @android.annotation.SuppressLint("ClickableViewAccessibility")
     private fun initMap() {
         if (mapReady) return
         map.setTileSource(TileSourceFactory.MAPNIK)
-        map.setMultiTouchControls(true)
+        map.setMultiTouchControls(true)          // pinch zoom + two-finger rotate/pan
+        map.isTilesScaledToDpi = true
         map.overlayManager.tilesOverlay.setColorFilter(TilesOverlay.INVERT_COLORS) // dark map
         map.controller.setZoom(16.0)
+        // The map sits in a ScrollView, which would otherwise swallow drag/pinch — it
+        // only let double-tap-zoom through. While a finger is on the map, tell every
+        // ancestor not to intercept, so panning and pinch-to-zoom reach the map.
+        map.setOnTouchListener { v, ev ->
+            when (ev.actionMasked) {
+                android.view.MotionEvent.ACTION_DOWN, android.view.MotionEvent.ACTION_MOVE ->
+                    v.parent?.requestDisallowInterceptTouchEvent(true)
+                android.view.MotionEvent.ACTION_UP, android.view.MotionEvent.ACTION_CANCEL ->
+                    v.parent?.requestDisallowInterceptTouchEvent(false)
+            }
+            false   // let osmdroid handle the gesture
+        }
         // Tap to drop/move the pin.
         val tap = MapEventsOverlay(object : MapEventsReceiver {
             override fun singleTapConfirmedHelper(p: GeoPoint): Boolean { placePin(p, center = false); return true }
