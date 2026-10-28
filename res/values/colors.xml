@@ -1,20 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  GhostWire brand palette — mint accent (#3CF2B0) on near-black navy (#0B0F14),
-  sampled from the Ghost Wire logo lockup. This file holds the LIGHT values;
-  res/values-night/colors.xml holds the dark ones (the default look, the app forces
-  night). Rebranding = change gw_accent here and in values-night.
+  Ghost Wire design-system palette (Foundations spec). This file holds the LIGHT
+  values; res/values-night/colors.xml holds the dark ones (the default look — the
+  app forces night). The system IS dark, so these two are near-identical; the light
+  copies exist only so a day-mode device still renders the brand rather than bare M3.
 -->
 <resources>
-    <color name="gw_accent">#12B386</color>
-    <color name="gw_primary">#12B386</color>
-    <color name="gw_primary_dark">#0C8A68</color>
-    <color name="gw_on_primary">#0B0F14</color>
-    <color name="gw_bg">#F5F7F8</color>
-    <color name="gw_surface">#FFFFFF</color>
-    <color name="gw_on_surface">#0B0F14</color>
-    <color name="gw_muted">#5A6472</color>
+    <!-- Surfaces (Foundations) -->
+    <color name="gw_ground">#0B0F14</color>
+    <color name="gw_surface">#111A24</color>
+    <color name="gw_raised">#17232F</color>
+    <color name="gw_line">#223244</color>
+    <color name="gw_text">#F4F7FA</color>
+    <!-- Semantic -->
+    <color name="gw_accent">#3CF2B0</color>
+    <color name="gw_critical">#FF5D6C</color>
+    <color name="gw_warning">#FFB84D</color>
+    <color name="gw_info">#5CB8FF</color>
+    <color name="gw_muted">#8FA3B5</color>
+    <!-- dark text that sits on the mint accent (buttons, pills) -->
+    <color name="gw_on_accent">#0B0F14</color>
 
-    <!-- Fixed (density-independent) adaptive-icon background, = the logo's navy. -->
+    <!-- Glass: translucent raised over the ground (~82%), with a hairline line. -->
+    <color name="gw_glass">#D117232F</color>
+    <color name="gw_glass_stroke">#33344A</color>
+
+    <!-- Severity badge fills (tint of the semantic colour) + their text = the colour. -->
+    <color name="gw_badge_critical_bg">#2E1418</color>
+    <color name="gw_badge_warning_bg">#2E2412</color>
+    <color name="gw_badge_info_bg">#12212E</color>
+    <color name="gw_badge_secure_bg">#0F241C</color>
+
+    <!-- Fixed (density-independent) adaptive-icon background = the ground. -->
     <color name="ic_launcher_bg">#0B0F14</color>
 </resources>

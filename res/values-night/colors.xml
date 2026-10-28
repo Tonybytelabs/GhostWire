@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Dark brand palette (the default look): mint on the logo's near-black navy. -->
+<!-- Ghost Wire dark palette (the default look) — the Foundations tokens verbatim. -->
 <resources>
+    <color name="gw_ground">#0B0F14</color>
+    <color name="gw_surface">#111A24</color>
+    <color name="gw_raised">#17232F</color>
+    <color name="gw_line">#223244</color>
+    <color name="gw_text">#F4F7FA</color>
     <color name="gw_accent">#3CF2B0</color>
-    <color name="gw_primary">#3CF2B0</color>
-    <color name="gw_primary_dark">#24C98A</color>
-    <color name="gw_on_primary">#0B0F14</color>
-    <color name="gw_bg">#0B0F14</color>
-    <color name="gw_surface">#141A22</color>
-    <color name="gw_on_surface">#EAF0F2</color>
-    <color name="gw_muted">#7A8694</color>
+    <color name="gw_critical">#FF5D6C</color>
+    <color name="gw_warning">#FFB84D</color>
+    <color name="gw_info">#5CB8FF</color>
+    <color name="gw_muted">#8FA3B5</color>
+    <color name="gw_on_accent">#0B0F14</color>
+    <color name="gw_glass">#D117232F</color>
+    <color name="gw_glass_stroke">#33344A</color>
+    <color name="gw_badge_critical_bg">#2E1418</color>
+    <color name="gw_badge_warning_bg">#2E2412</color>
+    <color name="gw_badge_info_bg">#12212E</color>
+    <color name="gw_badge_secure_bg">#0F241C</color>
 </resources>
