@@ -23,7 +23,12 @@ import android.content.Intent
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
 import android.view.View
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
@@ -68,9 +73,25 @@ class MainActivity : AppCompatActivity() {
     private var mediator: TabLayoutMediator? = null
     private var tabs: List<Pair<String, () -> Fragment>> = domains.values.first()
 
+    /** Swappable accent presets. index 0 (Mint) is the base theme. Must line up with
+     *  the Theme.GhostWire.* overlays in themes.xml. */
+    private data class Accent(val name: String, val color: Int, val theme: Int)
+    private val accents = listOf(
+        Accent("Mint", 0xFF3CF2B0.toInt(), R.style.Theme_GhostWire),
+        Accent("Cyan", 0xFF5CB8FF.toInt(), R.style.Theme_GhostWire_Cyan),
+        Accent("Amber", 0xFFFFB84D.toInt(), R.style.Theme_GhostWire_Amber),
+        Accent("Violet", 0xFFB388FF.toInt(), R.style.Theme_GhostWire_Violet),
+        Accent("Rose", 0xFFFF7EB6.toInt(), R.style.Theme_GhostWire_Rose),
+        Accent("Lime", 0xFFB8F34D.toInt(), R.style.Theme_GhostWire_Lime),
+    )
+
+    private fun accentIndex() =
+        getSharedPreferences(PREFS, MODE_PRIVATE).getInt(KEY_ACCENT, 0).coerceIn(0, accents.lastIndex)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         // Dark is the default look; cream is the light (MODE_NIGHT_NO) variant.
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        setTheme(accents[accentIndex()].theme)   // apply the chosen accent overlay
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -78,12 +99,44 @@ class MainActivity : AppCompatActivity() {
         pager = findViewById(R.id.pager)
         tabLayout = findViewById(R.id.tabs)
 
+        setBrandName()
+        toolbar.inflateMenu(R.menu.main_menu)
+        toolbar.setOnMenuItemClickListener {
+            if (it.itemId == R.id.action_accent) { showAccentDialog(); true } else false
+        }
+
         findViewById<BottomNavigationView>(R.id.bottom_nav).setOnItemSelectedListener { item ->
             domainFor(item.itemId)?.let { showDomain(it); true } ?: false
         }
         // Selecting the item fires the listener, which calls showDomain().
         findViewById<BottomNavigationView>(R.id.bottom_nav).selectedItemId = R.id.domain_cellular
         handleTagIntent(intent)
+    }
+
+    /** "Ghost Wire" wordmark: "Ghost" in text colour, "Wire" in the current accent. */
+    private fun setBrandName() {
+        val s = SpannableString("Ghost Wire")
+        s.setSpan(ForegroundColorSpan(0xFFF4F7FA.toInt()), 0, 5, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        s.setSpan(ForegroundColorSpan(accents[accentIndex()].color), 6, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        findViewById<TextView>(R.id.brand_name).text = s
+    }
+
+    private fun showAccentDialog() {
+        val names = accents.map { it.name }.toTypedArray()
+        AlertDialog.Builder(this)
+            .setTitle("Accent colour")
+            .setSingleChoiceItems(names, accentIndex()) { dlg, which ->
+                getSharedPreferences(PREFS, MODE_PRIVATE).edit().putInt(KEY_ACCENT, which).apply()
+                dlg.dismiss()
+                recreate()   // re-theme the whole app with the chosen accent
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    companion object {
+        private const val PREFS = "ghostwire"
+        private const val KEY_ACCENT = "accent"
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -124,7 +177,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun showDomain(name: String) {
         tabs = domains[name] ?: return
-        toolbar.title = name
+        // The toolbar shows the Ghost Wire wordmark now; the domain is conveyed by the
+        // selected bottom-nav item and the sub-tabs below.
         mediator?.detach()
         pager.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount() = tabs.size

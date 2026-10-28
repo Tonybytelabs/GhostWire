@@ -18,10 +18,34 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:logo="@drawable/gw_logo"
-            app:titleTextAppearance="@style/GhostWire.ToolbarTitle"
-            app:titleTextColor="?attr/colorOnSurface"
-            app:titleCentered="false" />
+            app:contentInsetStart="16dp"
+            app:contentInsetStartWithNavigation="16dp">
+
+            <!-- Brand lockup: ghost icon + "Ghost Wire" (Ghost = text, Wire = accent),
+                 the two-colour wordmark. The icon moved here, beside the name. -->
+            <LinearLayout
+                android:id="@+id/brand_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="34dp"
+                    android:layout_height="34dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/gw_logo" />
+
+                <TextView
+                    android:id="@+id/brand_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/space_grotesk"
+                    android:fontVariationSettings="\'wght\' 700"
+                    android:textSize="21sp" />
+            </LinearLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabs"

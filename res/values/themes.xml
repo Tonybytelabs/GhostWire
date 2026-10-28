@@ -101,8 +101,8 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:fontFamily">@font/space_grotesk</item>
         <item name="android:fontVariationSettings">\'wght\' 600</item>
-        <item name="strokeColor">@color/gw_accent</item>
-        <item name="android:textColor">@color/gw_accent</item>
+        <item name="strokeColor">?attr/colorPrimary</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
         <item name="rippleColor">#333CF2B0</item>
     </style>
 
@@ -142,7 +142,7 @@
     <!-- Glass floating action button: translucent fill, mint glyph, floats. -->
     <style name="GhostWire.Fab" parent="Widget.Material3.FloatingActionButton.Primary">
         <item name="backgroundTint">@color/gw_glass</item>
-        <item name="tint">@color/gw_accent</item>
+        <item name="tint">?attr/colorPrimary</item>
         <item name="elevation">8dp</item>
         <item name="borderWidth">1dp</item>
         <item name="rippleColor">#333CF2B0</item>
@@ -200,5 +200,17 @@
         <item name="android:fontFamily">@font/space_grotesk</item>
         <item name="android:fontVariationSettings">\'wght\' 600</item>
     </style>
+
+    <!-- ===================== Accent presets ===================== -->
+    <!-- Swappable accent: everything accent-tinted reads ?attr/colorPrimary, so an
+         overlay that only overrides colorPrimary recolours the whole app. Picked in
+         the toolbar menu; MainActivity applies the chosen one with setTheme(). All
+         presets are light enough to keep the dark on-accent text. Mint is the base
+         Theme.GhostWire (no overlay). -->
+    <style name="Theme.GhostWire.Cyan"   parent="Theme.GhostWire"><item name="colorPrimary">#5CB8FF</item></style>
+    <style name="Theme.GhostWire.Amber"  parent="Theme.GhostWire"><item name="colorPrimary">#FFB84D</item></style>
+    <style name="Theme.GhostWire.Violet" parent="Theme.GhostWire"><item name="colorPrimary">#B388FF</item></style>
+    <style name="Theme.GhostWire.Rose"   parent="Theme.GhostWire"><item name="colorPrimary">#FF7EB6</item></style>
+    <style name="Theme.GhostWire.Lime"   parent="Theme.GhostWire"><item name="colorPrimary">#B8F34D</item></style>
 
 </resources>
